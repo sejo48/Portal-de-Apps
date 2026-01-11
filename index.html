@@ -1,288 +1,388 @@
-import React, { useState, useEffect } from 'react';
-import { Moon, Sun, Search, Share2, ExternalLink, Grid, Smartphone, Monitor } from 'lucide-react';
-
-// DATOS DE TUS APLICACIONES
-// Jorge, he agregado "Configurar Timbre virtual" al inicio de la lista.
-const myApps = [
-  {
-    id: 16,
-    name: "Configurar Timbre virtual",
-    description: "Generador de QR.",
-    url: "https://sejo48.github.io/timbre/",
-    category: "Utilidades"
-  },
-  {
-    id: 15,
-    name: "QR Studio Pro",
-    description: "Personaliza tu código sin límites.",
-    url: "https://sejo48.github.io/codigo-QR/",
-    category: "Utilidades"
-  },
-  {
-    id: 14,
-    name: "Control de Entradas",
-    description: "Gestión y validación para Evento Baile.",
-    url: "https://sejo48.github.io/baile/",
-    category: "Eventos"
-  },
-  {
-    id: 13,
-    name: "Mis Finanzas Personales",
-    description: "Control y gestión de ingresos y gastos diarios.",
-    url: "https://sejo48.github.io/conta/",
-    category: "Finanzas"
-  },
-  {
-    id: 12,
-    name: "BINGO",
-    description: "Centro Ancianos Hatillo San Sebastián.",
-    url: "https://sejo48.github.io/bingo/",
-    category: "Entretenimiento"
-  },
-  {
-    id: 11,
-    name: "Agenda de Contactos",
-    description: "Directorio personal para gestión de números telefónicos.",
-    url: "https://sejo48.github.io/Agenda-telef-nica/",
-    category: "Utilidades"
-  },
-  {
-    id: 10,
-    name: "Lotería Gould",
-    description: "Sorteos y verificación de números de la suerte.",
-    url: "https://sejo48.github.io/loteria/",
-    category: "Entretenimiento"
-  },
-  {
-    id: 9,
-    name: "Bitácora de Mapa",
-    description: "Costa Rica a mi Manera. Exploración interactiva de rutas.",
-    url: "https://sejo48.github.io/mapa/",
-    category: "Viajes"
-  },
-  {
-    id: 8,
-    name: "Coordinador de Transporte",
-    description: "Gestión de salidas y control logístico de rutas.",
-    url: "https://sejo48.github.io/salidas/",
-    category: "Logística"
-  },
-  {
-    id: 1,
-    name: "MAGISTube",
-    description: "Premium Access. Plataforma de streaming V2.0.",
-    url: "https://sejo48.github.io/StreamTube-V20/",
-    category: "Multimedia"
-  },
-  {
-    id: 2,
-    name: "Gestor Financiero",
-    description: "Control total de finanzas personales con reportes y gráficas.",
-    url: "https://google.com", 
-    category: "Finanzas"
-  },
-  {
-    id: 3,
-    name: "Task Master Pro",
-    description: "Organización de tareas y proyectos con metodología ágil.",
-    url: "https://google.com",
-    category: "Productividad"
-  },
-  {
-    id: 4,
-    name: "Calculadora de Crédito",
-    description: "Simulador de préstamos bancarios y tablas de amortización.",
-    url: "https://google.com",
-    category: "Herramientas"
-  },
-  {
-    id: 5,
-    name: "Clima Global",
-    description: "Pronósticos meteorológicos en tiempo real por geolocalización.",
-    url: "https://google.com",
-    category: "Información"
-  },
-  {
-    id: 6,
-    name: "Zen Editor",
-    description: "Entorno de escritura minimalista sin distracciones.",
-    url: "https://google.com",
-    category: "Creatividad"
-  },
-  {
-    id: 7,
-    name: "Portafolio Visual",
-    description: "Galería interactiva para exhibición de fotografía y diseño.",
-    url: "https://google.com",
-    category: "Multimedia"
-  }
-];
-
-export default function App() {
-  // MODIFICADO: Ahora revisamos si ya existe una preferencia guardada al iniciar
-  const [darkMode, setDarkMode] = useState(() => {
-    const savedTheme = localStorage.getItem('theme');
-    return savedTheme === 'dark';
-  });
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredApps, setFilteredApps] = useState(myApps);
-
-  // NUEVO: Cada vez que cambias el modo, lo guardamos en el dispositivo
-  useEffect(() => {
-    localStorage.setItem('theme', darkMode ? 'dark' : 'light');
-  }, [darkMode]);
-
-  // Filtrado en tiempo real
-  useEffect(() => {
-    const results = myApps.filter(app =>
-      app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.description.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredApps(results);
-  }, [searchTerm]);
-
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-  };
-
-  const handleShare = (app) => {
-    const message = `Te comparto esta aplicación web: *${app.name}*\n${app.description}\nLink: ${app.url}`;
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-  };
-
-  return (
-    <div className={darkMode ? "dark" : ""}>
-      <div className="min-h-screen transition-colors duration-500 ease-in-out bg-slate-50 text-slate-900 dark:bg-[#0f172a] dark:text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Apps - Jorge Arturo Hernández</title>
+    <!-- Tailwind CSS para el diseño -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Iconos Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Configuración de Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'spin-slow': 'spin 3s linear infinite',
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Fuente Inter de Google Fonts -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
         
-        {/* ENCABEZADO */}
-        <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-[#0f172a]/70 border-b border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div className="flex items-center gap-3 group cursor-default">
-              <div className="p-2.5 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-xl shadow-lg shadow-indigo-500/20 transform group-hover:scale-105 transition-transform duration-300">
-                <Grid className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 leading-none">
-                  Portal de Apps
-                </h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 tracking-wide uppercase">
-                  Jorge Arturo Hernández
-                </p>
-              </div>
+        /* Animación suave para la aparición de tarjetas */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="transition-colors duration-500 ease-in-out bg-slate-50 text-slate-900 dark:bg-[#0f172a] dark:text-slate-100 selection:bg-indigo-500 selection:text-white min-h-screen flex flex-col">
+
+    <!-- ENCABEZADO -->
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-[#0f172a]/70 border-b border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3 group cursor-default">
+                <div class="p-2.5 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-xl shadow-lg shadow-indigo-500/20 transform group-hover:scale-105 transition-transform duration-300">
+                    <i data-lucide="grid" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 leading-none">
+                        Portal de Apps
+                    </h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 tracking-wide uppercase">
+                        Jorge Arturo Hernández
+                    </p>
+                </div>
             </div>
 
-            <div className="flex items-center gap-4">
-              <button
-                onClick={toggleTheme}
-                className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                aria-label="Cambiar tema"
-              >
-                {darkMode ? <Sun size={20} className="animate-spin-slow" /> : <Moon size={20} />}
-              </button>
+            <div class="flex items-center gap-4">
+                <button
+                    id="theme-toggle"
+                    class="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    aria-label="Cambiar tema"
+                >
+                    <i id="theme-icon-sun" data-lucide="sun" class="w-5 h-5 hidden"></i>
+                    <i id="theme-icon-moon" data-lucide="moon" class="w-5 h-5 hidden"></i>
+                </button>
             </div>
-          </div>
-        </header>
+        </div>
+    </header>
 
-        {/* CONTENIDO PRINCIPAL */}
-        <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-          
-          {/* SECCIÓN DE BÚSQUEDA */}
-          <div className="mb-12 max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
-              Tus herramientas favoritas,<br/>
-              <span className="text-indigo-600 dark:text-indigo-400">en un solo lugar.</span>
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        
+        <!-- SECCIÓN DE BÚSQUEDA -->
+        <div class="mb-12 max-w-2xl mx-auto text-center">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
+                Tus herramientas favoritas,<br/>
+                <span class="text-indigo-600 dark:text-indigo-400">en un solo lugar.</span>
             </h2>
             
-            <div className="relative mt-8 group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
-              </div>
-              <input
-                type="text"
-                placeholder="Buscar aplicación..."
-                className="block w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-transparent bg-white dark:bg-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-black/20 focus:border-indigo-500 focus:ring-0 outline-none transition-all placeholder-slate-400 text-slate-700 dark:text-slate-200 text-lg"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* GRID DE APLICACIONES */}
-          {filteredApps.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredApps.map((app) => (
-                <div 
-                  key={app.id} 
-                  className="group relative bg-white dark:bg-slate-800 rounded-2xl p-7 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10 dark:hover:shadow-black/40 border border-slate-100 dark:border-slate-700/50 transition-all duration-300 flex flex-col justify-between h-full transform hover:-translate-y-1"
-                >
-                  <div>
-                    <div className="flex justify-between items-start mb-5">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300">
-                        {app.category}
-                      </span>
-                      <div className="flex gap-1 text-slate-300 dark:text-slate-600">
-                        <Monitor size={14} />
-                        <Smartphone size={14} />
-                      </div>
-                    </div>
-                    
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                      {app.name}
-                    </h3>
-                    
-                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-8">
-                      {app.description}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-3 pt-6 border-t border-slate-100 dark:border-slate-700 mt-auto">
-                    <a
-                      href={app.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-slate-900 dark:bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-slate-800 dark:hover:bg-indigo-500 transition-all shadow-lg shadow-slate-900/20 dark:shadow-indigo-600/20 active:scale-95"
-                    >
-                      Abrir App <ExternalLink size={16} />
-                    </a>
-                    
-                    <button
-                      onClick={() => handleShare(app)}
-                      className="p-3 rounded-xl bg-green-50 text-green-600 dark:bg-green-900/10 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors border border-transparent hover:border-green-200 dark:hover:border-green-900"
-                      title="Compartir en WhatsApp"
-                    >
-                      <Share2 size={20} />
-                    </button>
-                  </div>
+            <div class="relative mt-8 group">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i data-lucide="search" class="h-5 w-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
                 </div>
-              ))}
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Buscar aplicación..."
+                    class="block w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-transparent bg-white dark:bg-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-black/20 focus:border-indigo-500 focus:ring-0 outline-none transition-all placeholder-slate-400 text-slate-700 dark:text-slate-200 text-lg"
+                />
             </div>
-          ) : (
-            <div className="text-center py-24 animate-fade-in">
-              <div className="bg-slate-100 dark:bg-slate-800 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Search className="text-slate-400 dark:text-slate-500" size={40} />
-              </div>
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-white">Sin resultados</h3>
-              <p className="text-slate-500 dark:text-slate-400 mt-2">No encontramos una aplicación con ese nombre.</p>
-            </div>
-          )}
-        </main>
+        </div>
 
-        {/* PIE DE PÁGINA */}
-        <footer className="mt-auto py-10 text-center border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f172a] transition-colors duration-300">
-          <div className="max-w-7xl mx-auto px-4">
-            <p className="text-sm font-medium text-slate-500 dark:text-slate-500 flex flex-col md:flex-row items-center justify-center gap-2">
-              <span>&copy; {new Date().getFullYear()} Portal de Aplicaciones.</span>
-              <span className="hidden md:inline text-slate-300 dark:text-slate-700">|</span>
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 font-bold">
-                Contenido creado por Jorge Arturo Hernández 2026
-              </span>
+        <!-- CONTENEDOR GRID -->
+        <div id="apps-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Las tarjetas se generan con JavaScript aquí -->
+        </div>
+
+        <!-- ESTADO VACÍO (OCULTO POR DEFECTO) -->
+        <div id="empty-state" class="hidden text-center py-24 animate-fade-in">
+            <div class="bg-slate-100 dark:bg-slate-800 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="search" class="text-slate-400 dark:text-slate-500 w-10 h-10"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Sin resultados</h3>
+            <p class="text-slate-500 dark:text-slate-400 mt-2">No encontramos una aplicación con ese nombre.</p>
+        </div>
+
+    </main>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="mt-auto py-10 text-center border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f172a] transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-500 flex flex-col md:flex-row items-center justify-center gap-2">
+                <span>&copy; <span id="year"></span> Portal de Aplicaciones.</span>
+                <span class="hidden md:inline text-slate-300 dark:text-slate-700">|</span>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 font-bold">
+                    Contenido creado por Jorge Arturo Hernández 2026
+                </span>
             </p>
-          </div>
-        </footer>
+        </div>
+    </footer>
 
-      </div>
-    </div>
-  );
-}
+    <!-- LÓGICA DE LA APLICACIÓN -->
+    <script>
+        // --- DATOS DE LAS APLICACIONES ---
+        const myApps = [
+            {
+                id: 16,
+                name: "Configurar Timbre virtual",
+                description: "Generador de QR.",
+                url: "https://sejo48.github.io/timbre/",
+                category: "Utilidades"
+            },
+            {
+                id: 15,
+                name: "QR Studio Pro",
+                description: "Personaliza tu código sin límites.",
+                url: "https://sejo48.github.io/codigo-QR/",
+                category: "Utilidades"
+            },
+            {
+                id: 14,
+                name: "Control de Entradas",
+                description: "Gestión y validación para Evento Baile.",
+                url: "https://sejo48.github.io/baile/",
+                category: "Eventos"
+            },
+            {
+                id: 13,
+                name: "Mis Finanzas Personales",
+                description: "Control y gestión de ingresos y gastos diarios.",
+                url: "https://sejo48.github.io/conta/",
+                category: "Finanzas"
+            },
+            {
+                id: 12,
+                name: "BINGO",
+                description: "Centro Ancianos Hatillo San Sebastián.",
+                url: "https://sejo48.github.io/bingo/",
+                category: "Entretenimiento"
+            },
+            {
+                id: 11,
+                name: "Agenda de Contactos",
+                description: "Directorio personal para gestión de números telefónicos.",
+                url: "https://sejo48.github.io/Agenda-telef-nica/",
+                category: "Utilidades"
+            },
+            {
+                id: 10,
+                name: "Lotería Gould",
+                description: "Sorteos y verificación de números de la suerte.",
+                url: "https://sejo48.github.io/loteria/",
+                category: "Entretenimiento"
+            },
+            {
+                id: 9,
+                name: "Bitácora de Mapa",
+                description: "Costa Rica a mi Manera. Exploración interactiva de rutas.",
+                url: "https://sejo48.github.io/mapa/",
+                category: "Viajes"
+            },
+            {
+                id: 8,
+                name: "Coordinador de Transporte",
+                description: "Gestión de salidas y control logístico de rutas.",
+                url: "https://sejo48.github.io/salidas/",
+                category: "Logística"
+            },
+            {
+                id: 1,
+                name: "MAGISTube",
+                description: "Premium Access. Plataforma de streaming V2.0.",
+                url: "https://sejo48.github.io/StreamTube-V20/",
+                category: "Multimedia"
+            },
+            {
+                id: 2,
+                name: "Gestor Financiero",
+                description: "Control total de finanzas personales con reportes y gráficas.",
+                url: "https://google.com", 
+                category: "Finanzas"
+            },
+            {
+                id: 3,
+                name: "Task Master Pro",
+                description: "Organización de tareas y proyectos con metodología ágil.",
+                url: "https://google.com",
+                category: "Productividad"
+            },
+            {
+                id: 4,
+                name: "Calculadora de Crédito",
+                description: "Simulador de préstamos bancarios y tablas de amortización.",
+                url: "https://google.com",
+                category: "Herramientas"
+            },
+            {
+                id: 5,
+                name: "Clima Global",
+                description: "Pronósticos meteorológicos en tiempo real por geolocalización.",
+                url: "https://google.com",
+                category: "Información"
+            },
+            {
+                id: 6,
+                name: "Zen Editor",
+                description: "Entorno de escritura minimalista sin distracciones.",
+                url: "https://google.com",
+                category: "Creatividad"
+            },
+            {
+                id: 7,
+                name: "Portafolio Visual",
+                description: "Galería interactiva para exhibición de fotografía y diseño.",
+                url: "https://google.com",
+                category: "Multimedia"
+            }
+        ];
+
+        // --- REFERENCIAS AL DOM ---
+        const appsGrid = document.getElementById('apps-grid');
+        const emptyState = document.getElementById('empty-state');
+        const searchInput = document.getElementById('search-input');
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIconSun = document.getElementById('theme-icon-sun');
+        const themeIconMoon = document.getElementById('theme-icon-moon');
+        const yearSpan = document.getElementById('year');
+
+        // --- FUNCIONES AUXILIARES ---
+        yearSpan.textContent = new Date().getFullYear();
+
+        function handleShare(appId) {
+            const app = myApps.find(a => a.id === appId);
+            if (!app) return;
+            
+            const message = `Te comparto esta aplicación web: *${app.name}*\n${app.description}\nLink: ${app.url}`;
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+        // Exponer handleShare globalmente para el onclick
+        window.handleShare = handleShare;
+
+        function renderApps(apps) {
+            appsGrid.innerHTML = '';
+            
+            if (apps.length === 0) {
+                appsGrid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            appsGrid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            apps.forEach((app, index) => {
+                const card = document.createElement('div');
+                card.className = "group relative bg-white dark:bg-slate-800 rounded-2xl p-7 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10 dark:hover:shadow-black/40 border border-slate-100 dark:border-slate-700/50 transition-all duration-300 flex flex-col justify-between h-full transform hover:-translate-y-1 animate-fade-in";
+                // Añadir un pequeño retraso en la animación para efecto cascada
+                card.style.animationDelay = `${index * 0.05}s`;
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-5">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300">
+                                ${app.category}
+                            </span>
+                            <div class="flex gap-1 text-slate-300 dark:text-slate-600">
+                                <i data-lucide="monitor" class="w-3.5 h-3.5"></i>
+                                <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                            ${app.name}
+                        </h3>
+                        
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-8">
+                            ${app.description}
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-3 pt-6 border-t border-slate-100 dark:border-slate-700 mt-auto">
+                        <a
+                            href="${app.url}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-slate-900 dark:bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-slate-800 dark:hover:bg-indigo-500 transition-all shadow-lg shadow-slate-900/20 dark:shadow-indigo-600/20 active:scale-95"
+                        >
+                            Abrir App <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </a>
+                        
+                        <button
+                            onclick="handleShare(${app.id})"
+                            class="p-3 rounded-xl bg-green-50 text-green-600 dark:bg-green-900/10 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors border border-transparent hover:border-green-200 dark:hover:border-green-900"
+                            title="Compartir en WhatsApp"
+                        >
+                            <i data-lucide="share-2" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                `;
+                appsGrid.appendChild(card);
+            });
+            
+            // Re-inicializar iconos Lucide para los nuevos elementos
+            lucide.createIcons();
+        }
+
+        // --- LÓGICA DE MODO OSCURO ---
+        function updateThemeIcon(isDark) {
+            if (isDark) {
+                themeIconMoon.classList.add('hidden');
+                themeIconSun.classList.remove('hidden');
+                themeIconSun.classList.add('animate-spin-slow');
+            } else {
+                themeIconSun.classList.add('hidden');
+                themeIconMoon.classList.remove('hidden');
+                themeIconSun.classList.remove('animate-spin-slow');
+            }
+        }
+
+        // Revisar preferencia guardada al cargar
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        let isDarkMode = savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
+
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        updateThemeIcon(isDarkMode);
+
+        // Toggle del tema
+        themeToggle.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+            updateThemeIcon(isDarkMode);
+        });
+
+        // --- LÓGICA DE BÚSQUEDA ---
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = myApps.filter(app => 
+                app.name.toLowerCase().includes(term) || 
+                app.description.toLowerCase().includes(term)
+            );
+            renderApps(filtered);
+        });
+
+        // --- INICIALIZACIÓN ---
+        renderApps(myApps);
+        lucide.createIcons();
+
+    </script>
+</body>
+</html>
